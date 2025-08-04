@@ -14,7 +14,7 @@ A simple and reliable MicroPython library for the VL53L1X Time-of-Flight (ToF) l
 ## Tested Hardware
 
 - **ESP8266**: Wemos D1 Mini
-- **ESP32**: Lolin D1 (ESP32-C3)
+- **ESP32**: Lolin D1 Mini V4 (ESP32-C3)
 - **Sensor**: VL53L1X ToF distance sensor modules
 
 ## Installation
@@ -203,5 +203,6 @@ Found a bug or want to improve the library? Contributions are welcome!
 This library is provided as-is for educational and commercial use.
 
 ---
+
 
 **Note**: This library was created because existing VL53L1X libraries for MicroPython were either incomplete or didn't work reliably. This implementation focuses on simplicity and reliability for practical applications.
