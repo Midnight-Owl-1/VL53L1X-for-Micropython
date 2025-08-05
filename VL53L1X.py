@@ -140,6 +140,16 @@ class VL53L1X:
             self.xshut_pin.value(1)  # Release reset
             time.sleep_ms(250)  # Wait for sensor to boot
 
+            #If sensor has a non-default address, then we need to re-change address from default to new address
+            if self.address != _VL53L1X_DEFAULT_DEVICE_ADDRESS:
+                print("Reconfiguring I2C address after hardware reset...")
+                self.i2c.writeto_mem(_VL53L1X_DEFAULT_DEVICE_ADDRESS, _I2C_SLAVE__DEVICE_ADDRESS, bytes([self.address & 0x7F]), addrsize=16)
+                #Verify the address change
+                model_id = self._read_u16(_VL53L1X_IDENTIFICATION__MODEL_ID)
+                if model_id != 0xEACC:
+                    print(f"Error: Address change failed, model ID read was {hex(model_id)}")
+                    return False
+
             # Reinitialize sensor
             self._init_sensor()
             self._last_distance = None
@@ -203,7 +213,13 @@ class VL53L1X:
         """Wake the sensor from low-power sleep mode."""
         if self.xshut_pin is not None:
             self.xshut_pin.value(1)
-            time.sleep_ms(10)  # Allow time for sensor to wake
+            time.sleep_ms(250)  # Allow time for sensor to wake
+            
+            # Reinitialize sensor
+            self._init_sensor()
+            self._last_distance = None
+            self._same_reading_count = 0
+
             print("Sensor woken up via XSHUT pin.")
         else:
             print("No XSHUT pin available, cannot wake sensor.")
